@@ -1,0 +1,195 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table auth.User as U {
+  id int [
+    pk,
+    increment
+  ]
+  username varchar [note: 'phone number validator']
+  password varchar
+  email email [
+    null
+  ]
+  phone_number varchar(15) [
+    unique,
+    not null,
+    note: "Phone number of the user which is the main identifier of users in this website"
+  ]
+
+  first_name varchar(150) [
+    null
+  ]
+  last_name varchar(150) [
+    null
+  ]
+  is_active boolean [
+    default: true,
+    note: "Designates whether this user should be treated as active. Unselect this instead of deleting accounts."
+  ]
+  is_staff boolean [
+    default: false,
+    note: "Designates whether the user can log into this admin site."
+  ]
+  is_superuser boolean [
+    default: false,
+    note: "Designates that this user has all permissions without explicitly assigning them."
+  ]
+  secret_key varchar(43) [
+    unique,
+    not null,
+    note: "Secret key used for encryption and token generation"
+  ]
+
+  last_login datetime
+  date_joined datetime [
+    default: 'timezone.now'
+  ]
+
+  created timestamp [
+    note: "Date and time of record creation"
+  ]
+  modified timestamp [
+    note: "Date and time of record modification"
+  ]
+  note: "User information model"
+}
+
+Table UserProfile as UP {
+  id int [
+    pk,
+    increment
+  ]
+  nickname varchar(30) [
+    null,
+    note: "Nickname of the user"
+  ]
+  is_email_verified boolean [
+    default: false,
+    note: "Email verification status"
+  ]
+  is_phone_number_verified boolean [
+    default: false,
+    note: "Phone number verification status"
+  ]
+  bio text [
+    null,
+    note: "User's bio"
+  ]
+  organization varchar(50) [
+    null,
+    note: "Organization"
+  ]
+  occupation varchar(50) [
+    null,
+    note: "Occupation"
+  ]
+  speciality varchar(30) [
+    null,
+    note: "Speciality"
+  ]
+  national_id varchar(10) [
+    null,
+    note: "National id"
+  ]
+  is_public boolean [
+    default: false,
+    note: "Is the profile visible for public to view"
+  ]
+
+  avatar image(110) [
+    note: "Avatar picture for profile"
+  ]
+  alternate_text varchar(100) [
+    not null,
+    note: "Description of the image"
+  ]
+  width_field int [
+    null,
+    note: "Width of the picture"
+  ]
+  height_field int [
+    null,
+    note: "Height of the picture"
+  ]
+  user int [
+    ref: - U.id,
+    note: "User related to profile"
+  ]
+  total_xp int [
+    default: 0,
+    note: "Total experience points gained"
+  ]
+  is_profile_complete boolean [
+    default: false,
+    note: "Completion status of the profile"
+  ]
+  created timestamp [
+    note: "Date and time of record creation"
+  ]
+  modified timestamp [
+    note: "Date and time of record modification"
+  ]
+  note: "Profile for the user"
+}
+
+Table Image as IMG {
+  id int [
+    pk,
+    increment
+  ]
+  creator int [
+    ref: - U.id,
+    note: "User related to profile"
+  ]
+  created timestamp [
+    note: "Date and time of record creation"
+  ]
+  modified timestamp [
+    note: "Date and time of record modification"
+  ]
+  category int [
+    ref: <> CAT.id,
+    note: "The categories of every imge"
+  ]
+  tag int [
+    ref: <> TAG.id,
+    note: "The categories of every imge"
+  ]
+  like int [
+    ref: > U.id
+  ]
+  disLike int [
+    ref: > U.id
+  ]
+}
+
+Table Tag as TAG {
+  id int [
+    pk,
+    increment
+  ]
+  created timestamp [
+    note: "Date and time of record creation"
+  ]
+  modified timestamp [
+    note: "Date and time of record modification"
+  ]
+  
+}
+
+
+Table Category as CAT {
+  id int [
+    pk,
+    increment
+  ]
+  created timestamp [
+    note: "Date and time of record creation"
+  ]
+  modified timestamp [
+    note: "Date and time of record modification"
+  ]
+  
+}
+
